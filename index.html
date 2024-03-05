@@ -1,35 +1,118 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>yangcq's eggy space</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
 
-	<style>
-		h1 {
-			color: red;
-			text-align: center;
-		}
+    table {
+      border-collapse: collapse;
+      text-align: center;
+    }
+    th, td {
+      border: 1px solid #aaa;
+      padding: 8px 16px;
+    }
 
-		#container {
-			text-align: center;
-		}
-
-		img {
-			width: 1400px;
-		}
-	</style>
-
-
+    .active {
+      background-color: skyblue;
+    }
+  </style>
 </head>
 <body>
 
-	<h1>Welcome to Yangcq's Eggy Happy Time</h1>
+  <div id="app">
+    <template v-if="books.length > 0">
+      <table>
+        <thead>
+          <tr>
+            <th>序号</th>
+            <th>书籍名称</th>
+            <th>出版日期</th>
+            <th>价格</th>
+            <th>数量</th>
+            <th>操作</th>
+          </tr>
+        </thead>
 
-	<div id="container">
-		<img src="./1.png" alt=""> <br>
-		<img src="./2.png" alt=""> <br>
-	</div>
-	
+        <tbody>
+          <tr v-for="(item, index) in books" 
+              :key="item.id"
+              @click="rowClick(index)"
+              :class="{ active: currentIndex === index}">
+            <td>{{ index + 1 }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.date }}</td>
+            <td>{{ formatPrice(item.price) }}</td>
+            <td>
+              <button :disabled="item.count <= 1" @click="decrement(item)">-</button>
+              {{ item.count }}
+              <button @click="increment(index)">+</button>
+            </td>
+            <td>
+              <button @click="removeBook(index)">移除</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>总价：{{ formatPrice(totalPrice) }}</h2>
+    </template>
+
+    <template v-else>
+      <h2>为什么不买东西？快去选购吧！</h2>
+    </template>
+  </div>
+
+  <script src="./js/vue.js"></script>
+  <script src="./js/data.js"></script>
+  <script>
+    const app = Vue.createApp({
+      data: function() {
+        return {
+          books: books,
+          currentIndex: -1
+        }
+      },
+
+      computed: {
+        totalPrice() {
+          let sum = 0
+          for (const item of this.books) {
+            sum += item.price * item.count
+          }
+          return sum
+        }
+      },
+
+      methods: {
+        formatPrice(price) {
+          return "￥" + price
+        },
+
+        decrement(item) {
+          console.log("----", item)
+          if (item.count === 1) this.disabled = true;
+          item.count--;
+        },
+
+        increment(index) {
+          console.log("++++", index)
+          this.books[index].count++;
+        },
+
+        removeBook(index) {
+          this.books.splice(index, 1)
+        },
+
+        rowClick(index) {
+          this.currentIndex = index;
+        }
+      }
+    })
+
+    app.mount("#app")
+  </script>
 </body>
 </html>
