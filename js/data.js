@@ -1,4 +1,4 @@
-const books = [
+const products = [
   {
     id: 1,
     name: '兰博基尼',
@@ -8,7 +8,7 @@ const books = [
   },
   {
     id: 2,
-    name: '梵克雅宝10斤大项链',
+    name: '10斤钻石大项链',
     date: '2022-12',
     price: 3.00,
     count: 1
@@ -35,4 +35,3 @@ const books = [
     count: 1
   },
 ]
-

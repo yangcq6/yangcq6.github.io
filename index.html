@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <style>
-
     table {
       border-collapse: collapse;
       text-align: center;
@@ -23,91 +22,88 @@
 <body>
 
   <div id="app">
-    <template v-if="books.length > 0">
+    <template v-if="this.data.length">
       <table>
         <thead>
           <tr>
             <th>序号</th>
-            <th>书籍名称</th>
-            <th>出版日期</th>
+            <th>商品名称</th>
+            <th>生产日期</th>
             <th>价格</th>
             <th>数量</th>
             <th>操作</th>
           </tr>
         </thead>
-
         <tbody>
-          <tr v-for="(item, index) in books" 
+          <tr v-for="(item, index) in data" 
               :key="item.id"
               @click="rowClick(index)"
-              :class="{ active: currentIndex === index}">
-            <td>{{ index + 1 }}</td>
-            <td>{{ item.name }}</td>
-            <td>{{ item.date }}</td>
-            <td>{{ formatPrice(item.price) }}</td>
-            <td>
-              <button :disabled="item.count <= 1" @click="decrement(item)">-</button>
+              :class="{active: index === this.currentIndex}">
+            <td> {{ index + 1 }}</td>
+            <td> {{ item.name }}</td>
+            <td> {{ item.date }}</td>
+            <td> {{ formatPrice(item.price) }}</td>
+            <td> 
+              <button :disabled="item.count <= 1" @click="desc(index)">-</button>
               {{ item.count }}
-              <button @click="increment(index)">+</button>
+              <button @click="asc(item)">+</button>
             </td>
             <td>
-              <button @click="removeBook(index)">移除</button>
+              <button @click="removeItem(index)">移除</button>
             </td>
           </tr>
         </tbody>
       </table>
-
-      <h2>总价：{{ formatPrice(totalPrice) }}</h2>
+      <h2>总价：{{ formatPrice(totalPrice) }} </h2>
     </template>
 
     <template v-else>
-      <h2>为什么不买东西？快去选购吧！</h2>
+      <h2>怎么不买东西呀？</h2>
     </template>
   </div>
 
-  <script src="./js/vue.js"></script>
-  <script src="./js/data.js"></script>
+  <script src="../js/vue.js"></script>
+  <script src="../js/data.js"></script>
   <script>
     const app = Vue.createApp({
       data: function() {
         return {
-          books: books,
+          data: products,
           currentIndex: -1
         }
       },
 
       computed: {
-        totalPrice() {
-          let sum = 0
-          for (const item of this.books) {
-            sum += item.price * item.count
+        totalPrice: function() {
+          let s = 0
+          for (let i = 0; i < this.data.length; i++) {
+            s += this.data[i].price * this.data[i].count
           }
-          return sum
+          return s
         }
       },
 
       methods: {
-        formatPrice(price) {
-          return "￥" + price
+        formatPrice(val) {
+          return "￥" + val
         },
 
-        decrement(item) {
-          console.log("----", item)
-          if (item.count === 1) this.disabled = true;
-          item.count--;
+        desc(index) {
+          console.log("数量--")
+          this.data[index].count--
         },
 
-        increment(index) {
-          console.log("++++", index)
-          this.books[index].count++;
+        asc(item) {
+          console.log("数量++")
+          item.count++
         },
 
-        removeBook(index) {
-          this.books.splice(index, 1)
+        removeItem(index) {
+          this.data.splice(index, 1);
         },
 
         rowClick(index) {
-          this.currentIndex = index;
+          this.currentIndex = index
         }
       }
     })
