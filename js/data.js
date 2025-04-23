@@ -22,7 +22,7 @@ const products = [
   },
   {
     id: 4,
-    name: '保时捷全型号车100俩',
+    name: '保时捷全型号车100辆',
     date: '2022-12',
     price: 5.00,
     count: 1
